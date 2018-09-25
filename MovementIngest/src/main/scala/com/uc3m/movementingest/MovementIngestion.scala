@@ -9,7 +9,11 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 object MovementIngestion {
 
   def main(args: Array[String]): Unit = {
-    implicit val sparks: SparkSession = SparkSession.builder().appName("KafkaStreamProcessor").getOrCreate()
+    implicit val sparks: SparkSession = SparkSession
+      .builder()
+      .appName("KafkaStreamProcessor")
+      .config("spark.cassandra.connection.host", "localhost:9042")
+      .getOrCreate()
     implicit val ssc = new StreamingContext(sparks.sparkContext, Seconds(5))
     val bootstrapServers: String = "localhost:9092, localhost:9093, localhost:9094"
     val topics: String = "movements_topic"
